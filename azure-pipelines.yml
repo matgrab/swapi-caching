@@ -18,11 +18,19 @@ trigger:
 pool:
   vmImage: ubuntu-latest
 
-steps:
-- script: echo Hello, world!
-  displayName: 'Run a one-line script'
+jobs:
+- job: build
+  displayName: Build
+  steps:
 
-- script: |
-    echo Add other tasks to build, test, and deploy your project.
-    echo See https://aka.ms/yaml
-  displayName: 'Run a multi-line script'
+  - task: CmdLine@2
+    displayName: 'Move .env file'
+    inputs:
+      script: mv $(Build.SourcesDirectory)/.env.example $(Build.SourcesDirectory)/.env
+
+  - task: DockerCompose@0
+    displayName: Run Docker-compose-up
+    inputs:
+      containerregistrytype: Container Registry
+      dockerComposeFile: $(Build.SourcesDirectory)/docker-compose.yaml
+      dockerComposeCommand: 'up -d'
