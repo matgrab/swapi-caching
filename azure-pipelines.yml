@@ -34,3 +34,8 @@ jobs:
       containerregistrytype: Container Registry
       dockerComposeFile: $(Build.SourcesDirectory)/docker-compose.yaml
       dockerComposeCommand: 'up -d'
+
+  - task: npmAuthenticate@0
+    displayName: NPM artifacts verification
+    inputs:
+      workingFile: .npmrc
